@@ -23,6 +23,14 @@ struct ContentView: View {
             Button("Select Image") {
                 showingImagePicker = true
             }
+            
+            Button("Save Image") {
+                guard let inputImage = inputImage else {
+                    return
+                }
+                let imageSaver = ImageSaver()
+                imageSaver.writeToPhotoAlbum(image: inputImage)
+            }
         }
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(image: $inputImage)
@@ -35,7 +43,21 @@ struct ContentView: View {
             return
         }
         image = Image(uiImage: inputImage)
+        
+        //immediately saves image that got loaded; creating a duplicate
+        
+        //UIImageWriteToSavedPhotosAlbum(inputImage, nil, nil, nil)
 
+    }
+}
+
+class ImageSaver: NSObject {
+    func writeToPhotoAlbum(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveCompleted), nil)
+    }
+    
+    @objc func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        print("Save finished!")
     }
 }
 
