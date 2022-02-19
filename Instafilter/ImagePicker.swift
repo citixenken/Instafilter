@@ -12,6 +12,12 @@ import SwiftUI
 struct ImagePicker: UIViewControllerRepresentable {
     
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        var parent: ImagePicker
+        
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+        
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             
             //Tell the picker to go away
@@ -26,12 +32,6 @@ struct ImagePicker: UIViewControllerRepresentable {
                     self.parent.image = image as? UIImage
                 }
             }
-        }
-        
-        var parent: ImagePicker
-        
-        init(_ parent: ImagePicker) {
-            self.parent = parent
         }
     }
     

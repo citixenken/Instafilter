@@ -13,18 +13,20 @@ struct ContentView: View {
     
     @State private var image: Image?
     @State private var filterIntensity = 0.5
+    @State private var showingImagePicker = false
+    @State private var inputImage: UIImage?
     
     
-//    @State private var image: Image?
-//    @State private var showingImagePicker = false
-//
-//    @State private var inputImage: UIImage?
+    //    @State private var image: Image?
+    //    @State private var showingImagePicker = false
+    //
+    //    @State private var inputImage: UIImage?
     var body: some View {
         VStack {
             ZStack {
                 Rectangle()
                     .fill(.secondary)
-                Text("Tap to select a picture")
+                Text("Tap gray area to select a picture")
                     .foregroundColor(.white)
                     .font(.headline)
                 
@@ -33,7 +35,7 @@ struct ContentView: View {
                     .scaledToFit()
             }
             .onTapGesture {
-                //select an image
+                showingImagePicker = true
             }
             
             HStack {
@@ -50,53 +52,68 @@ struct ContentView: View {
                 Spacer()
                 
                 Button("Save", action: save)
-                    //save the picture
+                //save the picture
             }
             .padding()
         }
         .padding([.vertical, .bottom])
         .navigationTitle("Instafilter")
         
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(image: $inputImage)
+        }
+        
+        .onChange(of: inputImage) {
+            _ in loadImage()
+        }
         
         
-//        VStack {
-//            image?
-//                .resizable()
-//                .scaledToFit()
-//
-//            Button("Select Image") {
-//                showingImagePicker = true
-//            }
-//
-//            Button("Save Image") {
-//                guard let inputImage = inputImage else {
-//                    return
-//                }
-//                let imageSaver = ImageSaver()
-//                imageSaver.writeToPhotoAlbum(image: inputImage)
-//            }
-//        }
-//        .sheet(isPresented: $showingImagePicker) {
-//            ImagePicker(image: $inputImage)
-//        }
-//        .onChange(of: inputImage) { _ in loadImage() }
+        
+        //        VStack {
+        //            image?
+        //                .resizable()
+        //                .scaledToFit()
+        //
+        //            Button("Select Image") {
+        //                showingImagePicker = true
+        //            }
+        //
+        //            Button("Save Image") {
+        //                guard let inputImage = inputImage else {
+        //                    return
+        //                }
+        //                let imageSaver = ImageSaver()
+        //                imageSaver.writeToPhotoAlbum(image: inputImage)
+        //            }
+        //        }
+        //        .sheet(isPresented: $showingImagePicker) {
+        //            ImagePicker(image: $inputImage)
+        //        }
+        //        .onChange(of: inputImage) { _ in loadImage() }
     }
     
     func save() {
         
     }
     
-//    func loadImage() {
-//        guard let inputImage = inputImage else {
-//            return
-//        }
-//        image = Image(uiImage: inputImage)
-        
-        //immediately saves image that got loaded; creating a duplicate
-        
-        //UIImageWriteToSavedPhotosAlbum(inputImage, nil, nil, nil)
-
-//    }
+    func loadImage() {
+        guard let inputImage = inputImage else {
+            return
+        }
+        image = Image(uiImage: inputImage)
+    }
+    
+    //    func loadImage() {
+    //        guard let inputImage = inputImage else {
+    //            return
+    //        }
+    //        image = Image(uiImage: inputImage)
+    
+    //immediately saves image that got loaded; creating a duplicate
+    
+    //UIImageWriteToSavedPhotosAlbum(inputImage, nil, nil, nil)
+    
+    //    }
 }
 
 class ImageSaver: NSObject {
